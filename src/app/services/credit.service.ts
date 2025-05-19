@@ -2,16 +2,15 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError } from 'rxjs';
 import { BaseService } from './base.service';
-
-// We'll define the Credit interface later, for now using any
-interface Credit {
-  id?: number;
-  clientId?: number;
-  [key: string]: any;
-}
+import {
+  Credit,
+  CreditImmobilier,
+  CreditPersonnel,
+  CreditProfessionnel,
+} from '../models/credit.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CreditService extends BaseService {
   private endpoint = '/credits';
@@ -25,10 +24,9 @@ export class CreditService extends BaseService {
    * @returns Observable with array of credits
    */
   getAll(): Observable<Credit[]> {
-    return this.http.get<Credit[]>(`${this.apiUrl}${this.endpoint}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http
+      .get<Credit[]>(`${this.apiUrl}${this.endpoint}`)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -37,10 +35,9 @@ export class CreditService extends BaseService {
    * @returns Observable with credit data
    */
   getById(id: number): Observable<Credit> {
-    return this.http.get<Credit>(`${this.apiUrl}${this.endpoint}/${id}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http
+      .get<Credit>(`${this.apiUrl}${this.endpoint}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -49,10 +46,9 @@ export class CreditService extends BaseService {
    * @returns Observable with array of credits for the client
    */
   getByClientId(clientId: number): Observable<Credit[]> {
-    return this.http.get<Credit[]>(`${this.apiUrl}/clients/${clientId}/credits`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http
+      .get<Credit[]>(`${this.apiUrl}/clients/${clientId}/credits`)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -61,10 +57,9 @@ export class CreditService extends BaseService {
    * @returns Observable with the created credit
    */
   add(credit: Credit): Observable<Credit> {
-    return this.http.post<Credit>(`${this.apiUrl}${this.endpoint}`, credit)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http
+      .post<Credit>(`${this.apiUrl}${this.endpoint}`, credit)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -73,10 +68,9 @@ export class CreditService extends BaseService {
    * @returns Observable with the updated credit
    */
   update(credit: Credit): Observable<Credit> {
-    return this.http.put<Credit>(`${this.apiUrl}${this.endpoint}/${credit.id}`, credit)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http
+      .put<Credit>(`${this.apiUrl}${this.endpoint}/${credit.id}`, credit)
+      .pipe(catchError(this.handleError));
   }
 
   /**
@@ -85,9 +79,8 @@ export class CreditService extends BaseService {
    * @returns Observable with the operation result
    */
   delete(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${this.endpoint}/${id}`)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http
+      .delete(`${this.apiUrl}${this.endpoint}/${id}`)
+      .pipe(catchError(this.handleError));
   }
 }

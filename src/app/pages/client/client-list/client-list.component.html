@@ -1,0 +1,48 @@
+<div class="client-list-container">
+  <h2>Liste des Clients</h2>
+  
+  <div class="actions mb-3">
+    <a routerLink="/clients/add" class="btn btn-primary">Ajouter un client</a>
+  </div>
+
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Chargement des clients...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && clients.length === 0" class="alert alert-info">
+    Aucun client trouvé.
+  </div>
+
+  <table *ngIf="!loading && clients.length > 0" class="client-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let client of clients">
+        <td>{{ client.id }}</td>
+        <td>{{ client.nom }}</td>
+        <td>{{ client.prenom }}</td>
+        <td>{{ client.email }}</td>
+        <td>{{ client.telephone }}</td>
+        <td class="actions">
+          <a [routerLink]="['/clients', client.id]" class="btn btn-sm btn-info">Détails</a>
+          <a [routerLink]="['/clients', client.id, 'edit']" class="btn btn-sm btn-warning">Modifier</a>
+          <a [routerLink]="['/clients', client.id, 'credits']" class="btn btn-sm btn-secondary">Crédits</a>
+          <button (click)="deleteClient(client.id!)" class="btn btn-sm btn-danger">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

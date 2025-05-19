@@ -1,0 +1,91 @@
+<div class="remboursement-form-container">
+  <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} un remboursement</h2>
+  
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <form [formGroup]="remboursementForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-group" *ngIf="!creditId">
+      <label for="creditId">Crédit*</label>
+      <select id="creditId" formControlName="creditId" class="form-control" [ngClass]="{'is-invalid': isInvalid('creditId')}">
+        <option value="">Sélectionnez un crédit</option>
+        <option *ngFor="let credit of credits" [value]="credit.id">Crédit #{{ credit.id }} - {{ credit.montant }}€ ({{ credit.type }})</option>
+      </select>
+      <div *ngIf="isInvalid('creditId')" class="invalid-feedback">
+        <div *ngIf="remboursementForm.get('creditId')?.errors?.['required']">Le crédit est requis.</div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="montant">Montant (€)*</label>
+        <input type="number" id="montant" formControlName="montant" class="form-control" [ngClass]="{'is-invalid': isInvalid('montant')}">
+        <div *ngIf="isInvalid('montant')" class="invalid-feedback">
+          <div *ngIf="remboursementForm.get('montant')?.errors?.['required']">Le montant est requis.</div>
+          <div *ngIf="remboursementForm.get('montant')?.errors?.['min']">Le montant doit être supérieur à 0.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="numeroEcheance">Numéro d'échéance*</label>
+        <input type="number" id="numeroEcheance" formControlName="numeroEcheance" class="form-control" [ngClass]="{'is-invalid': isInvalid('numeroEcheance')}">
+        <div *ngIf="isInvalid('numeroEcheance')" class="invalid-feedback">
+          <div *ngIf="remboursementForm.get('numeroEcheance')?.errors?.['required']">Le numéro d'échéance est requis.</div>
+          <div *ngIf="remboursementForm.get('numeroEcheance')?.errors?.['min']">Le numéro d'échéance doit être supérieur à 0.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="dateEcheance">Date d'échéance*</label>
+        <input type="date" id="dateEcheance" formControlName="dateEcheance" class="form-control" [ngClass]="{'is-invalid': isInvalid('dateEcheance')}">
+        <div *ngIf="isInvalid('dateEcheance')" class="invalid-feedback">
+          <div *ngIf="remboursementForm.get('dateEcheance')?.errors?.['required']">La date d'échéance est requise.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="datePaiement">Date de paiement</label>
+        <input type="date" id="datePaiement" formControlName="datePaiement" class="form-control">
+        <small class="form-text text-muted">Laissez vide si le paiement n'a pas encore été effectué.</small>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="statut">Statut*</label>
+        <select id="statut" formControlName="statut" class="form-control" [ngClass]="{'is-invalid': isInvalid('statut')}">
+          <option *ngFor="let statut of statutOptions" [value]="statut">{{ statut }}</option>
+        </select>
+        <div *ngIf="isInvalid('statut')" class="invalid-feedback">
+          <div *ngIf="remboursementForm.get('statut')?.errors?.['required']">Le statut est requis.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="montantPenalite">Montant pénalité (€)</label>
+        <input type="number" id="montantPenalite" formControlName="montantPenalite" class="form-control">
+        <small class="form-text text-muted">Montant de la pénalité en cas de retard.</small>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="commentaire">Commentaire</label>
+      <textarea id="commentaire" formControlName="commentaire" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="navigateAfterSave()">Annuler</button>
+    </div>
+  </form>
+</div>

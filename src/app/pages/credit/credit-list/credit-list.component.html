@@ -1,0 +1,58 @@
+<div class="credit-list-container">
+  <h2 *ngIf="client">Crédits de {{ client.prenom }} {{ client.nom }}</h2>
+  <h2 *ngIf="!client">Liste des Crédits</h2>
+  
+  <div class="actions mb-3">
+    <a *ngIf="clientId" [routerLink]="['/clients', clientId, 'credits', 'add']" class="btn btn-primary">Ajouter un crédit</a>
+    <a *ngIf="!clientId" routerLink="/credits/add" class="btn btn-primary">Ajouter un crédit</a>
+    <a *ngIf="clientId" [routerLink]="['/clients', clientId]" class="btn btn-secondary">Retour au client</a>
+    <a *ngIf="!clientId" routerLink="/clients" class="btn btn-secondary">Liste des clients</a>
+  </div>
+
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Chargement des crédits...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && credits.length === 0" class="alert alert-info">
+    Aucun crédit trouvé.
+  </div>
+
+  <table *ngIf="!loading && credits.length > 0" class="credit-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Montant</th>
+        <th>Taux</th>
+        <th>Durée</th>
+        <th>Début</th>
+        <th>Fin</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let credit of credits">
+        <td>{{ credit.id }}</td>
+        <td>{{ credit.type }}</td>
+        <td>{{ formatMontant(credit.montant) }}</td>
+        <td>{{ credit.tauxInteret }}%</td>
+        <td>{{ credit.duree }} mois</td>
+        <td>{{ formatDate(credit.dateDebut) }}</td>
+        <td>{{ formatDate(credit.dateFin) }}</td>
+        <td>{{ credit.statut }}</td>
+        <td class="actions">
+          <a [routerLink]="['/credits', credit.id]" class="btn btn-sm btn-info">Détails</a>
+          <a [routerLink]="['/credits', credit.id, 'edit']" class="btn btn-sm btn-warning">Modifier</a>
+          <a [routerLink]="['/credits', credit.id, 'remboursements']" class="btn btn-sm btn-secondary">Remboursements</a>
+          <button (click)="deleteCredit(credit.id!)" class="btn btn-sm btn-danger">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,75 @@
+<div class="client-detail-container">
+  <h2>Détails du client</h2>
+  
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Chargement des détails du client...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="client" class="client-info">
+    <div class="client-header">
+      <h3>{{ client.prenom }} {{ client.nom }}</h3>
+      <div class="client-actions">
+        <a [routerLink]="['/clients', client.id, 'edit']" class="btn btn-warning">Modifier</a>
+        <a [routerLink]="['/clients', client.id, 'credits']" class="btn btn-primary">Voir les crédits</a>
+        <a routerLink="/clients" class="btn btn-secondary">Retour à la liste</a>
+      </div>
+    </div>
+
+    <div class="client-details">
+      <div class="detail-group">
+        <span class="detail-label">ID:</span>
+        <span class="detail-value">{{ client.id }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Nom:</span>
+        <span class="detail-value">{{ client.nom }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Prénom:</span>
+        <span class="detail-value">{{ client.prenom }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Email:</span>
+        <span class="detail-value">{{ client.email }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Téléphone:</span>
+        <span class="detail-value">{{ client.telephone }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Adresse:</span>
+        <span class="detail-value">{{ client.adresse }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Date de naissance:</span>
+        <span class="detail-value">{{ formatDate(client.dateNaissance) }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Profession:</span>
+        <span class="detail-value">{{ client.profession }}</span>
+      </div>
+      
+      <div class="detail-group">
+        <span class="detail-label">Revenu mensuel:</span>
+        <span class="detail-value">{{ client.revenuMensuel | currency:'EUR' }}</span>
+      </div>
+      
+      <div class="detail-group" *ngIf="client.dateCreation">
+        <span class="detail-label">Date de création:</span>
+        <span class="detail-value">{{ formatDate(client.dateCreation) }}</span>
+      </div>
+    </div>
+  </div>
+</div>

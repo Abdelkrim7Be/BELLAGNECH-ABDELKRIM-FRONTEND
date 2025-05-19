@@ -14,16 +14,18 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'gestion-credits-angular' title`, () => {
+  it(`should have the 'Gestion des Crédits' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('gestion-credits-angular');
+    expect(app.title).toEqual('Gestion des Crédits');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, gestion-credits-angular');
+    expect(compiled.querySelector('h1')?.textContent).toContain(
+      'Gestion des Crédits'
+    );
   });
 });

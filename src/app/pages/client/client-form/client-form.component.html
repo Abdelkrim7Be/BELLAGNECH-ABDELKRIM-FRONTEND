@@ -1,0 +1,90 @@
+<div class="client-form-container">
+  <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} un client</h2>
+  
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <form [formGroup]="clientForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <div class="form-group">
+      <label for="nom">Nom*</label>
+      <input type="text" id="nom" formControlName="nom" class="form-control" [ngClass]="{'is-invalid': isInvalid('nom')}">
+      <div *ngIf="isInvalid('nom')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('nom')?.errors?.['required']">Le nom est requis.</div>
+        <div *ngIf="clientForm.get('nom')?.errors?.['maxlength']">Le nom ne doit pas dépasser 50 caractères.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="prenom">Prénom*</label>
+      <input type="text" id="prenom" formControlName="prenom" class="form-control" [ngClass]="{'is-invalid': isInvalid('prenom')}">
+      <div *ngIf="isInvalid('prenom')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('prenom')?.errors?.['required']">Le prénom est requis.</div>
+        <div *ngIf="clientForm.get('prenom')?.errors?.['maxlength']">Le prénom ne doit pas dépasser 50 caractères.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email*</label>
+      <input type="email" id="email" formControlName="email" class="form-control" [ngClass]="{'is-invalid': isInvalid('email')}">
+      <div *ngIf="isInvalid('email')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('email')?.errors?.['required']">L'email est requis.</div>
+        <div *ngIf="clientForm.get('email')?.errors?.['email']">Veuillez entrer une adresse email valide.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="telephone">Téléphone*</label>
+      <input type="tel" id="telephone" formControlName="telephone" class="form-control" [ngClass]="{'is-invalid': isInvalid('telephone')}">
+      <div *ngIf="isInvalid('telephone')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('telephone')?.errors?.['required']">Le téléphone est requis.</div>
+        <div *ngIf="clientForm.get('telephone')?.errors?.['pattern']">Veuillez entrer un numéro de téléphone valide.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="adresse">Adresse*</label>
+      <textarea id="adresse" formControlName="adresse" class="form-control" [ngClass]="{'is-invalid': isInvalid('adresse')}"></textarea>
+      <div *ngIf="isInvalid('adresse')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('adresse')?.errors?.['required']">L'adresse est requise.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="dateNaissance">Date de naissance*</label>
+      <input type="date" id="dateNaissance" formControlName="dateNaissance" class="form-control" [ngClass]="{'is-invalid': isInvalid('dateNaissance')}">
+      <div *ngIf="isInvalid('dateNaissance')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('dateNaissance')?.errors?.['required']">La date de naissance est requise.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="profession">Profession*</label>
+      <input type="text" id="profession" formControlName="profession" class="form-control" [ngClass]="{'is-invalid': isInvalid('profession')}">
+      <div *ngIf="isInvalid('profession')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('profession')?.errors?.['required']">La profession est requise.</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="revenuMensuel">Revenu mensuel (€)*</label>
+      <input type="number" id="revenuMensuel" formControlName="revenuMensuel" class="form-control" [ngClass]="{'is-invalid': isInvalid('revenuMensuel')}">
+      <div *ngIf="isInvalid('revenuMensuel')" class="invalid-feedback">
+        <div *ngIf="clientForm.get('revenuMensuel')?.errors?.['required']">Le revenu mensuel est requis.</div>
+        <div *ngIf="clientForm.get('revenuMensuel')?.errors?.['min']">Le revenu mensuel doit être positif.</div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+      </button>
+      <a routerLink="/clients" class="btn btn-secondary">Annuler</a>
+    </div>
+  </form>
+</div>

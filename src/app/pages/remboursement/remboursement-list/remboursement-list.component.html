@@ -1,0 +1,55 @@
+<div class="remboursement-list-container">
+  <h2 *ngIf="credit">Remboursements du crédit #{{ credit.id }}</h2>
+  <h2 *ngIf="!credit">Liste des Remboursements</h2>
+  
+  <div class="actions mb-3">
+    <a *ngIf="creditId" [routerLink]="['/credits', creditId, 'remboursements', 'add']" class="btn btn-primary">Ajouter un remboursement</a>
+    <a *ngIf="!creditId" routerLink="/remboursements/add" class="btn btn-primary">Ajouter un remboursement</a>
+    <a *ngIf="creditId" [routerLink]="['/credits', creditId]" class="btn btn-secondary">Retour au crédit</a>
+    <a *ngIf="!creditId" routerLink="/credits" class="btn btn-secondary">Liste des crédits</a>
+  </div>
+
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Chargement des remboursements...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && remboursements.length === 0" class="alert alert-info">
+    Aucun remboursement trouvé.
+  </div>
+
+  <table *ngIf="!loading && remboursements.length > 0" class="remboursement-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Crédit ID</th>
+        <th>Montant</th>
+        <th>Date d'échéance</th>
+        <th>Date de paiement</th>
+        <th>Statut</th>
+        <th>N° Échéance</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let remboursement of remboursements">
+        <td>{{ remboursement.id }}</td>
+        <td>{{ remboursement.creditId }}</td>
+        <td>{{ formatMontant(remboursement.montant) }}</td>
+        <td>{{ formatDate(remboursement.dateEcheance) }}</td>
+        <td>{{ remboursement.datePaiement ? formatDate(remboursement.datePaiement) : 'Non payé' }}</td>
+        <td>{{ remboursement.statut }}</td>
+        <td>{{ remboursement.numeroEcheance }}</td>
+        <td class="actions">
+          <a [routerLink]="['/remboursements', remboursement.id]" class="btn btn-sm btn-info">Détails</a>
+          <a [routerLink]="['/remboursements', remboursement.id, 'edit']" class="btn btn-sm btn-warning">Modifier</a>
+          <button (click)="deleteRemboursement(remboursement.id!)" class="btn btn-sm btn-danger">Supprimer</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,84 @@
+.credit-list-container {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.credit-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  
+  th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+  }
+  
+  tr:hover {
+    background-color: #f8f9fa;
+  }
+  
+  .actions {
+    display: flex;
+    gap: 0.5rem;
+    
+    .btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.loading-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #3f51b5;
+    animation: spin 1s ease-in-out infinite;
+    margin-bottom: 1rem;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: 0.25rem;
+  margin-bottom: 1rem;
+  
+  &.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+  }
+  
+  &.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+  }
+}

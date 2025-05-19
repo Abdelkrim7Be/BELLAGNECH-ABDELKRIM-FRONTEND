@@ -1,0 +1,219 @@
+<div class="credit-form-container">
+  <h2>{{ isEditMode ? 'Modifier' : 'Ajouter' }} un crédit</h2>
+  
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <form [formGroup]="creditForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+    <!-- Common fields -->
+    <div class="form-section">
+      <h3>Informations générales</h3>
+      
+      <div class="form-group" *ngIf="!clientId">
+        <label for="clientId">Client*</label>
+        <select id="clientId" formControlName="clientId" class="form-control" [ngClass]="{'is-invalid': isInvalid('clientId')}">
+          <option value="">Sélectionnez un client</option>
+          <option *ngFor="let client of clients" [value]="client.id">{{ client.prenom }} {{ client.nom }}</option>
+        </select>
+        <div *ngIf="isInvalid('clientId')" class="invalid-feedback">
+          <div *ngIf="creditForm.get('clientId')?.errors?.['required']">Le client est requis.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="type">Type de crédit*</label>
+        <select id="type" formControlName="type" class="form-control" [ngClass]="{'is-invalid': isInvalid('type')}">
+          <option value="PERSONNEL">Personnel</option>
+          <option value="IMMOBILIER">Immobilier</option>
+          <option value="PROFESSIONNEL">Professionnel</option>
+        </select>
+        <div *ngIf="isInvalid('type')" class="invalid-feedback">
+          <div *ngIf="creditForm.get('type')?.errors?.['required']">Le type de crédit est requis.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="montant">Montant (€)*</label>
+          <input type="number" id="montant" formControlName="montant" class="form-control" [ngClass]="{'is-invalid': isInvalid('montant')}">
+          <div *ngIf="isInvalid('montant')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('montant')?.errors?.['required']">Le montant est requis.</div>
+            <div *ngIf="creditForm.get('montant')?.errors?.['min']">Le montant doit être positif.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="tauxInteret">Taux d'intérêt (%)*</label>
+          <input type="number" id="tauxInteret" formControlName="tauxInteret" class="form-control" [ngClass]="{'is-invalid': isInvalid('tauxInteret')}">
+          <div *ngIf="isInvalid('tauxInteret')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('tauxInteret')?.errors?.['required']">Le taux d'intérêt est requis.</div>
+            <div *ngIf="creditForm.get('tauxInteret')?.errors?.['min']">Le taux d'intérêt doit être positif.</div>
+            <div *ngIf="creditForm.get('tauxInteret')?.errors?.['max']">Le taux d'intérêt ne peut pas dépasser 100%.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="duree">Durée (mois)*</label>
+          <input type="number" id="duree" formControlName="duree" class="form-control" [ngClass]="{'is-invalid': isInvalid('duree')}">
+          <div *ngIf="isInvalid('duree')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('duree')?.errors?.['required']">La durée est requise.</div>
+            <div *ngIf="creditForm.get('duree')?.errors?.['min']">La durée doit être positive.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dateDebut">Date de début*</label>
+          <input type="date" id="dateDebut" formControlName="dateDebut" class="form-control" [ngClass]="{'is-invalid': isInvalid('dateDebut')}">
+          <div *ngIf="isInvalid('dateDebut')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('dateDebut')?.errors?.['required']">La date de début est requise.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="dateFin">Date de fin*</label>
+          <input type="date" id="dateFin" formControlName="dateFin" class="form-control" [ngClass]="{'is-invalid': isInvalid('dateFin')}">
+          <div *ngIf="isInvalid('dateFin')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('dateFin')?.errors?.['required']">La date de fin est requise.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="statut">Statut*</label>
+          <select id="statut" formControlName="statut" class="form-control" [ngClass]="{'is-invalid': isInvalid('statut')}">
+            <option *ngFor="let statut of statutCreditOptions" [value]="statut">{{ statut }}</option>
+          </select>
+          <div *ngIf="isInvalid('statut')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('statut')?.errors?.['required']">Le statut est requis.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="typeRemboursement">Type de remboursement*</label>
+          <select id="typeRemboursement" formControlName="typeRemboursement" class="form-control" [ngClass]="{'is-invalid': isInvalid('typeRemboursement')}">
+            <option *ngFor="let type of typeRemboursementOptions" [value]="type">{{ type }}</option>
+          </select>
+          <div *ngIf="isInvalid('typeRemboursement')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('typeRemboursement')?.errors?.['required']">Le type de remboursement est requis.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" class="form-control"></textarea>
+      </div>
+    </div>
+
+    <!-- Type-specific fields -->
+    <div class="form-section" *ngIf="selectedCreditType === 'PERSONNEL'">
+      <h3>Informations spécifiques - Crédit Personnel</h3>
+      
+      <div class="form-group">
+        <label for="motif">Motif*</label>
+        <input type="text" id="motif" formControlName="motif" class="form-control" [ngClass]="{'is-invalid': isInvalid('motif')}">
+        <div *ngIf="isInvalid('motif')" class="invalid-feedback">
+          <div *ngIf="creditForm.get('motif')?.errors?.['required']">Le motif est requis.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section" *ngIf="selectedCreditType === 'IMMOBILIER'">
+      <h3>Informations spécifiques - Crédit Immobilier</h3>
+      
+      <div class="form-group">
+        <label for="adresseBien">Adresse du bien*</label>
+        <textarea id="adresseBien" formControlName="adresseBien" class="form-control" [ngClass]="{'is-invalid': isInvalid('adresseBien')}"></textarea>
+        <div *ngIf="isInvalid('adresseBien')" class="invalid-feedback">
+          <div *ngIf="creditForm.get('adresseBien')?.errors?.['required']">L'adresse du bien est requise.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="valeurBien">Valeur du bien (€)*</label>
+          <input type="number" id="valeurBien" formControlName="valeurBien" class="form-control" [ngClass]="{'is-invalid': isInvalid('valeurBien')}">
+          <div *ngIf="isInvalid('valeurBien')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('valeurBien')?.errors?.['required']">La valeur du bien est requise.</div>
+            <div *ngIf="creditForm.get('valeurBien')?.errors?.['min']">La valeur du bien doit être positive.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="typeBien">Type de bien*</label>
+          <select id="typeBien" formControlName="typeBien" class="form-control" [ngClass]="{'is-invalid': isInvalid('typeBien')}">
+            <option *ngFor="let type of typeBienOptions" [value]="type">{{ type }}</option>
+          </select>
+          <div *ngIf="isInvalid('typeBien')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('typeBien')?.errors?.['required']">Le type de bien est requis.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="apport">Apport (€)*</label>
+          <input type="number" id="apport" formControlName="apport" class="form-control" [ngClass]="{'is-invalid': isInvalid('apport')}">
+          <div *ngIf="isInvalid('apport')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('apport')?.errors?.['required']">L'apport est requis.</div>
+            <div *ngIf="creditForm.get('apport')?.errors?.['min']">L'apport doit être positif ou nul.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section" *ngIf="selectedCreditType === 'PROFESSIONNEL'">
+      <h3>Informations spécifiques - Crédit Professionnel</h3>
+      
+      <div class="form-group">
+        <label for="nomEntreprise">Nom de l'entreprise*</label>
+        <input type="text" id="nomEntreprise" formControlName="nomEntreprise" class="form-control" [ngClass]="{'is-invalid': isInvalid('nomEntreprise')}">
+        <div *ngIf="isInvalid('nomEntreprise')" class="invalid-feedback">
+          <div *ngIf="creditForm.get('nomEntreprise')?.errors?.['required']">Le nom de l'entreprise est requis.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="siret">SIRET*</label>
+        <input type="text" id="siret" formControlName="siret" class="form-control" [ngClass]="{'is-invalid': isInvalid('siret')}">
+        <div *ngIf="isInvalid('siret')" class="invalid-feedback">
+          <div *ngIf="creditForm.get('siret')?.errors?.['required']">Le SIRET est requis.</div>
+          <div *ngIf="creditForm.get('siret')?.errors?.['pattern']">Le SIRET doit contenir 14 chiffres.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="chiffreAffaires">Chiffre d'affaires (€)*</label>
+          <input type="number" id="chiffreAffaires" formControlName="chiffreAffaires" class="form-control" [ngClass]="{'is-invalid': isInvalid('chiffreAffaires')}">
+          <div *ngIf="isInvalid('chiffreAffaires')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('chiffreAffaires')?.errors?.['required']">Le chiffre d'affaires est requis.</div>
+            <div *ngIf="creditForm.get('chiffreAffaires')?.errors?.['min']">Le chiffre d'affaires doit être positif.</div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="activite">Activité*</label>
+          <input type="text" id="activite" formControlName="activite" class="form-control" [ngClass]="{'is-invalid': isInvalid('activite')}">
+          <div *ngIf="isInvalid('activite')" class="invalid-feedback">
+            <div *ngIf="creditForm.get('activite')?.errors?.['required']">L'activité est requise.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary" [disabled]="loading">
+        {{ isEditMode ? 'Mettre à jour' : 'Ajouter' }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="navigateAfterSave()">Annuler</button>
+    </div>
+  </form>
+</div>
